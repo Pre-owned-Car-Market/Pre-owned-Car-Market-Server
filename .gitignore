@@ -1,0 +1,28 @@
+# env
+.env
+.env.*   # .env.local 등 변형도 차단
+
+# dependencies
+node_modules/
+
+# logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# runtime / coverage
+pids
+*.pid
+coverage/
+
+# build output (있다면)
+dist/
+build/
+
+# editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/
