@@ -48,7 +48,10 @@ const required = (v) => typeof v === 'string' && v.trim() !== '';
 // 요청 로깅(디버그)
 app.use((req, _res, next) => {
   if (req.method !== 'GET') {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`, req.body || {});
+    console.log(
+  '[request]',
+  { time: new Date().toISOString(), method: req.method, url: req.url, body: req.body || {} }
+);
   }
   next();
 });
