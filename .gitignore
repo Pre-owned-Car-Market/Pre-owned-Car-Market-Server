@@ -3,7 +3,10 @@
 .env.*   # .env.local 등 변형도 차단
 
 # dependencies
-node_modules/
+node_modules
+dist
+coverage
+*.min.js
 
 # logs
 logs

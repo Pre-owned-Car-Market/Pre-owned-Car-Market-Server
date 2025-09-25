@@ -1,0 +1,44 @@
+name: Backend CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # 환경변수/런타임 확인(디버그에 유용)
+      - name: Show workspace
+        run: |
+          node -v
+          npm -v
+          ls -la
+
+      # ESLint
+      - name: Lint
+        run: npm run lint
+
+      # 간단 스모크 테스트(서버 실제 실행 X, 구문 오류/require 오류 체크)
+      - name: Smoke test (syntax & require)
+        run: node -e "require('./index.js'); console.log('OK: index.js required')"
