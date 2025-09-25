@@ -39,5 +39,8 @@ jobs:
 
       # 서버를 실제로 띄우지 않고 구문/모듈 로딩만 확인
       - name: Smoke test (syntax & require)
+        env:
+            CI: true
+            NODE_ENV: test
         run: |
-          node -e "require('./index.js'); console.log('OK: index.js required')"
+          node --input-type=module -e "await import('./index.js'); console.log('OK: index.js imported');"
