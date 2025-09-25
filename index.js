@@ -3,18 +3,29 @@ import 'dotenv/config';
 
 import crypto from 'crypto';
 import https from 'https';
-import { URL } from 'url';            // ✅ Node ESM에서 URL 명시 import
+import { URL } from 'url';
 
 import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import axios from 'axios';
+import rateLimit from 'express-rate-limit';
 
 export const app = express();         // 테스트/스모크용 export
 const port = process.env.PORT || 8081;
 
 app.use(cors({ origin: true }));      // 운영에선 특정 도메인만 허용 권장
 app.use(express.json());
+
+app.use('/api/send', limiter);
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true, // RateLimit-* 헤더
+  legacyHeaders: false,  // X-RateLimit-* 헤더 비활성화
+});
+
 
 /* ───────── SMTP(메일) ───────── */
 const transporter = nodemailer.createTransport({
