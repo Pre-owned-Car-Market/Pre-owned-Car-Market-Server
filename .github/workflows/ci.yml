@@ -41,4 +41,5 @@ jobs:
 
       # 간단 스모크 테스트(서버 실제 실행 X, 구문 오류/require 오류 체크)
       - name: Smoke test (syntax & require)
-        run: node -e "require('./index.js'); console.log('OK: index.js required')"
+        run: |
+          node -e "require('./index.js'); console.log('OK: index.js required')"
