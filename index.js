@@ -17,7 +17,6 @@ const port = process.env.PORT || 8081;
 app.use(cors({ origin: true }));      // 운영에선 특정 도메인만 허용 권장
 app.use(express.json());
 
-app.use('/api/send', limiter);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -26,6 +25,7 @@ const limiter = rateLimit({
   legacyHeaders: false,  // X-RateLimit-* 헤더 비활성화
 });
 
+app.use('/api/send', limiter);
 
 /* ───────── SMTP(메일) ───────── */
 const transporter = nodemailer.createTransport({
