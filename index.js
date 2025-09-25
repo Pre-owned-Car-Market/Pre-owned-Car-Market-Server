@@ -1,17 +1,19 @@
 // backend/index.js
 import 'dotenv/config';
+
 import crypto from 'crypto';
 import https from 'https';
+import { URL } from 'url';            // ✅ Node ESM에서 URL 명시 import
 
 import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import axios from 'axios';
 
-export const app = express(); // ← 테스트/스모크에서 import만으로 로딩 테스트 가능
+export const app = express();         // 테스트/스모크용 export
 const port = process.env.PORT || 8081;
 
-app.use(cors({ origin: true })); // 운영에서는 특정 도메인만 허용 권장
+app.use(cors({ origin: true }));      // 운영에선 특정 도메인만 허용 권장
 app.use(express.json());
 
 /* ───────── SMTP(메일) ───────── */
@@ -22,7 +24,7 @@ const transporter = nodemailer.createTransport({
   auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
 });
 
-// CI나 테스트에서는 실제 네트워크 검증을 생략
+// CI/테스트에서는 네트워크 검증 생략
 const isCI = process.env.CI === 'true' || process.env.NODE_ENV === 'test';
 if (!isCI) {
   transporter
@@ -33,9 +35,11 @@ if (!isCI) {
 
 /* ───────── SOLAPI REST 인증 헬퍼 ───────── */
 function createSolapiAuthHeader(apiKey, apiSecret) {
-  const dateTime = new Date().toISOString(); // ISO8601 (UTC)
+  const dateTime = new Date().toISOString();           // ISO8601 (UTC)
   const salt = crypto.randomBytes(16).toString('hex'); // 12~64 bytes random
-  const signature = crypto.createHmac('sha256', apiSecret).update(dateTime + salt).digest('hex');
+  const signature = crypto.createHmac('sha256', apiSecret)
+    .update(dateTime + salt)
+    .digest('hex');
   return `HMAC-SHA256 apiKey=${apiKey}, date=${dateTime}, salt=${salt}, signature=${signature}`;
 }
 
@@ -112,7 +116,7 @@ app.post('/api/send', async (req, res) => {
           Authorization: authHeader,
           'Content-Type': 'application/json',
         },
-        httpsAgent: ipv4Agent,
+        httpsAgent: ipv4Agent, // ✅ IPv4 강제
         timeout: 10000,
       });
       console.log('[sms:result]', status, JSON.stringify(data));
@@ -138,7 +142,7 @@ app.post('/api/send', async (req, res) => {
   }
 });
 
-/* ───────── “직접 실행일 때만” 서버 시작 (import 시에는 미기동) ───────── */
+/* ───────── “직접 실행일 때만” 서버 시작 (import 시 미기동) ───────── */
 if (import.meta.url === new URL(process.argv[1], 'file://').href) {
   console.log('ENV CHECK', {
     SMS_SENDER: process.env.SMS_SENDER?.replace(/\d(?=\d{3})/g, '*'),
