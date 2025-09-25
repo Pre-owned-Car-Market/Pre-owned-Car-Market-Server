@@ -28,18 +28,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 환경변수/런타임 확인(디버그에 유용)
       - name: Show workspace
         run: |
           node -v
           npm -v
           ls -la
 
-      # ESLint
       - name: Lint
         run: npm run lint
 
-      # 간단 스모크 테스트(서버 실제 실행 X, 구문 오류/require 오류 체크)
+      # 서버를 실제로 띄우지 않고 구문/모듈 로딩만 확인
       - name: Smoke test (syntax & require)
         run: |
           node -e "require('./index.js'); console.log('OK: index.js required')"

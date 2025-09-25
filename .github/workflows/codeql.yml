@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: ["**"]
   schedule:
-    - cron: "17 2 * * 3"  # 매주 수요일 11:17 KST쯤(UTC 02:17)
+    - cron: "17 2 * * 3"  # 매주 수요일 11:17 KST 근처(UTC 기준)
 
 permissions:
   contents: read

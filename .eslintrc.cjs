@@ -1,4 +1,4 @@
-/* eslint v8 classic config for Node.js */
+/* eslint v8 classic config for Node.js (ESM) */
 module.exports = {
   root: true,
   env: {
@@ -7,7 +7,7 @@ module.exports = {
   },
   parserOptions: {
     ecmaVersion: 2022,
-    sourceType: "script", // index.js가 CommonJS라면 "script"
+    sourceType: "module", // ✅ index.js가 import/export 사용
   },
   extends: [
     "eslint:recommended",
@@ -16,16 +16,15 @@ module.exports = {
   ],
   plugins: ["n", "import"],
   rules: {
-    // 팀 규칙(원하면 조정)
     "no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     "no-console": "off",
     "import/order": ["warn", { "newlines-between": "always" }],
-    "n/no-missing-import": "off", // CommonJS require 사용 시 false-positive 방지
-    "n/no-unsupported-features/es-syntax": "off",
+    "n/no-missing-import": "off",
+    "n/no-unsupported-features/es-syntax": "off"
   },
   settings: {
     "import/resolver": {
-      node: { extensions: [".js", ".cjs", ".mjs", ".json"] },
-    },
-  },
+      node: { extensions: [".js", ".cjs", ".mjs", ".json"] }
+    }
+  }
 };
