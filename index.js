@@ -1,11 +1,11 @@
 // backend/index.js
 import 'dotenv/config';
+import crypto from 'crypto';
+import https from 'https';
 import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import axios from 'axios';
-import crypto from 'crypto';
-import https from 'https'; 
 
 const app = express();
 app.use(cors({ origin: true })); // 운영에서는 특정 도메인만 허용 권장
